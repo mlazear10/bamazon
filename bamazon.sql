@@ -19,4 +19,9 @@ VALUES ("Gears of War", "video games", 30.99, 56),
  ("monopoly", "board game", 10.4, 45),
  ("Mad Max", "film", 20, 100);
  
+ 
+INSERT INTO products(productName, departmentName, price, stockQuantity)
+values ("Ray Ban Sunglasses", "apparel", 150, 20100),
+ ("Sunflowers","garden",5, 43534);
+ 
  select * from bamazon.products;

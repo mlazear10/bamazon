@@ -52,7 +52,7 @@ var promptCustomer = function(res) {
                     }
                 }).then(function(answer){
                     if((res[id].stockQuantity-answer.quantity)>0) {
-                        connection.query("UPDATE products SET stockQuantity='"+(res[id].stockQuantity-answer.quant)+"' WHERE productName='"+product+"'",function(err,res2){
+                        connection.query("UPDATE products SET stockQuantity='"+(res[id].stockQuantity-answer.quantity)+"' WHERE productName='"+product+"'",function(err,res2){
                             console.log("Product Bought");
                             makeTable();
                         })
@@ -63,9 +63,9 @@ var promptCustomer = function(res) {
                 })
             }
         }
-    if(i==res.length && correct == false) {
-        console.log("Not a valid selection");
-        promptCustomer(res);
+        if(i==res.length && correct == false) {
+            console.log("Not a valid selection");
+            promptCustomer(res);
     }
     })
 }
