@@ -54,10 +54,11 @@ var promptCustomer = function(res) {
                     if((res[id].stockQuantity-answer.quantity)>0) {
                         connection.query("UPDATE products SET stockQuantity='"+(res[id].stockQuantity-answer.quantity)+"' WHERE productName='"+product+"'",function(err,res2){
                             console.log("Product Bought");
+                            console.log("Cost $" + res[id].price * answer.quantity);
                             makeTable();
                         })
                     } else {
-                        console.log("Not a valid selection");
+                        console.log("Not a valid selection or not enough product remaining");
                         promptCustomer(res);
                     }
                 })
