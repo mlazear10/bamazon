@@ -36,7 +36,6 @@ var promptManager = function(res) {
             break;
         case 'Add New Product' :
             newProduct();
-            break;
         }
     });      
 }
@@ -66,7 +65,6 @@ var lowInventory = function() {
 
 // add inventory function
 var products = [];
-var productsJSON = [];
 
 var addInventory = function() {
     connection.query("SELECT * FROM products", function(err, res) {
@@ -116,3 +114,47 @@ var addInventory = function() {
     })
 }
 
+// adds a new product to the database
+var newProduct = function() {
+    inquirer.prompt([{
+        name: "item",
+        type: "input",
+        message: "What new product are we adding?",
+    }, {
+        name: "category",
+        type: "input",
+        message: "What category do you want to place the item in?",
+    }, {
+        name: "price",
+        type: "input",
+        message: "How much will the product sell for?",
+        validate: function(value) {
+            if(isNaN(value) == false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }, {
+    name: "quantity",
+    type: "input",
+    message: "What is the quantity of the new product?",
+    validate: function(value) {
+        if(isNaN(value) == false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    }]).then(function(answer) {
+        connection.query("INSERT INTO products SET ?", {
+            productName: answer.item,
+            departmentName: answer.category,
+            price: answer.price,
+            stockQuantity: answer.quantity
+        }, function(err,res) {
+            console.log("Your products were succcessfully added to the inventory");
+            promptManager();
+        })
+    })
+}
