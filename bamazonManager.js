@@ -20,6 +20,7 @@ var promptManager = function(res) {
         type: 'list',
         name: 'choice',
         message: "What would you like to do? [Quit with Q]",
+        default: 'View Products for Sale',
         choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product']
     }]).then(function(answer) {
         console.log(answer.choice);
@@ -50,10 +51,11 @@ var saleableProducts = function() {
     })
 }
 
+// Low inventory for items that are below 50 items
 var lowInventory = function() {
     connection.query("SELECT * FROM products WHERE stockQuantity < 50", function(err, res) {
         if (err) throw err;
-        console.log("LOW INVENTORY: ");
+        console.log("LOW INVENTORY below quantity of 50: ");
         for(var i = 0; i < res.length; i++) {
             var parseNum = parseInt(i) + 1;
             console.log("ItemID: " + res[i].itemid + " - Product Name: " + res[i].productName + " | " + "Department Name: " +  res[i].departmentName + " | " + "Price: $"+  res[i].price + " | " + "Stock Quantity: " + res[i].stockQuantity);
@@ -64,6 +66,53 @@ var lowInventory = function() {
 
 // add inventory function
 var products = [];
-var addInventory = function() {
+var productsJSON = [];
 
+var addInventory = function() {
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+        // console.log(res);
+        for (var i = 0; i < res.length; i++) {
+            var parseNum = parseInt(i) + 1;       
+            products.push(res[i].productName);
+        }
+        askInventory();
+
+        function askInventory() { 
+            console.log(products);
+            inquirer.prompt([{
+                type: 'list',
+                name: 'productChoice',
+                message: "What products would you like to add?",
+                choices: products
+            }, {
+                type: 'input',
+                name: 'howMuch',
+                message: 'How much inventory should we add?',
+                validate: function(value) {
+                    if (isNaN(value)) {
+                        return false 
+                    } else {
+                        return true
+                    }
+                }
+            }]).then(function(answer) {
+                for (var i = 0; i < res.length; i++) {
+                    if (answer.productChoice == res[i].productName) {
+                        var id = i;
+                        console.log(answer);
+                        console.log(res[id]);
+                        console.log(res[id].stockQuantity + parseInt(answer.howMuch));
+                        // var prodQuant = answer.push(res[i].stockQuantity);
+                        connection.query("UPDATE products SET stockQuantity='"+(res[id].stockQuantity + parseInt(answer.howMuch)+"' WHERE productName='"+answer.productChoice+"'"), function(err , res) {
+                            console.log("Product Added");
+                        })
+                        console.log("Cost $" + res[id].price * answer.howMuch);
+                        promptManager();
+                    }
+                }
+            });
+        }   
+    })
 }
+
