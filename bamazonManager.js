@@ -52,20 +52,32 @@ var saleableProducts = function() {
 
 // Low inventory for items that are below 50 items
 var lowInventory = function() {
-    connection.query("SELECT * FROM products WHERE stockQuantity < 50", function(err, res) {
-        if (err) throw err;
-        console.log("LOW INVENTORY below quantity of 50: ");
-        for(var i = 0; i < res.length; i++) {
-            var parseNum = parseInt(i) + 1;
-            console.log("ItemID: " + res[i].itemid + " - Product Name: " + res[i].productName + " | " + "Department Name: " +  res[i].departmentName + " | " + "Price: $"+  res[i].price + " | " + "Stock Quantity: " + res[i].stockQuantity);
+    inquirer.prompt({
+        name: "inventoryCheck",
+        type: 'input',
+        message: "Search for products with inventory below what numeric value?? (example 50)",
+        validate: function(value) {
+            if(isNaN(value) == false) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        connection.end();
-    });
+    }).then(function(answer){
+        connection.query("SELECT * FROM products WHERE stockQuantity < 50", function(err, res) {
+            if (err) throw err;
+            console.log("LOW INVENTORY below quantity of 50: ");
+            for(var i = 0; i < res.length; i++) {
+                var parseNum = parseInt(i) + 1;
+                console.log("ItemID: " + res[i].itemid + " - Product Name: " + res[i].productName + " | " + "Department Name: " +  res[i].departmentName + " | " + "Price: $"+  res[i].price + " | " + "Stock Quantity: " + res[i].stockQuantity);
+            }
+            promptManager();
+        });
+    })
 }
 
 // add inventory function
 var products = [];
-
 var addInventory = function() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
@@ -75,7 +87,6 @@ var addInventory = function() {
             products.push(res[i].productName);
         }
         askInventory();
-
         function askInventory() { 
             console.log(products);
             inquirer.prompt([{
