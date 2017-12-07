@@ -9,7 +9,7 @@ create table products(
     price decimal(10,4) not null,
     stockQuantity integer(10) not null,
     primary key (itemid)
-);
+)
     
 INSERT INTO products(productName, departmentName, price, stockQuantity)
 VALUES ("Gears of War", "video games", 30.99, 56),

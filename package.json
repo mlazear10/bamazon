@@ -1,0 +1,19 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "a mock amazon store for filling inventory",
+  "main": "bamazon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlazear10/bamazon.git"
+  },
+  "author": "mike lazer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mlazear10/bamazon/issues"
+  },
+  "homepage": "https://github.com/mlazear10/bamazon#readme"
+}
